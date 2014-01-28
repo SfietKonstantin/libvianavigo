@@ -29,40 +29,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#ifndef SEARCHRESULT_H
-#define SEARCHRESULT_H
+#ifndef PLACE_P_H
+#define PLACE_P_H
 
-#include <QtCore/QObject>
-// TODO: Your includes here
+#include "place.h"
 
-class SearchResultPrivate;
-class SearchResult: public QObject
+class PlacePrivate
 {
-    Q_OBJECT
-    Q_PROPERTY(QString name READ name CONSTANT)
-    Q_PROPERTY(QString city READ city CONSTANT)
-    Q_PROPERTY(QString type READ type CONSTANT)
-    Q_PROPERTY(QString typeLabel READ typeLabel CONSTANT)
-    Q_PROPERTY(QString search READ search CONSTANT)
-    Q_PROPERTY(QString externalCode READ externalCode CONSTANT)
-    Q_PROPERTY(QString cityCode READ cityCode CONSTANT)
 public:
-    explicit SearchResult(QObject *parent = 0);
-    virtual ~SearchResult();
-    static SearchResult * create(const QString &name, const QString &city, const QString &type, const QString &typeLabel, const QString &search, const QString &externalCode, const QString &cityCode, QObject *parent = 0);
-    QString name() const;
-    QString city() const;
-    QString type() const;
-    QString typeLabel() const;
-    QString search() const;
-    QString externalCode() const;
-    QString cityCode() const;
-signals:
+    explicit PlacePrivate(Place *q);
+    QString name;
+    QString city;
+    Place::Type type;
 protected:
-    explicit SearchResult(SearchResultPrivate &dd, QObject *parent = 0);
-    QScopedPointer<SearchResultPrivate> d_ptr;
+    Place * const q_ptr;
 private:
-    Q_DECLARE_PRIVATE(SearchResult)
+    Q_DECLARE_PUBLIC(Place)
 };
 
-#endif // SEARCHRESULT_H
+#endif // Place_P_H

@@ -52,13 +52,13 @@ public:
     void setLoading(bool loading);
 protected:
     virtual void handleFinished(QNetworkReply *reply);
-    virtual void handleError(QNetworkReply *reply, QNetworkReply::NetworkError error);
+    virtual void handleError(QNetworkReply *reply, QNetworkReply::NetworkError error,
+                             const QString &errorString);
     void clear();
     void addData(const QList<QObject *> &data);
     AbstractModel * const q_ptr;
 private Q_SLOTS:
     void slotFinished();
-    void slotError(QNetworkReply::NetworkError error);
 private:
     bool m_loading;
     QNetworkReply *m_reply;

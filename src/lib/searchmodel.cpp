@@ -36,8 +36,18 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonParseError>
+#include "place.h"
 
 static const char *LIST_KEY = "list";
+static const char *NAME_KEY = "name";
+static const char *CITY_KEY = "city";
+static const char *TYPE_KEY = "type";
+
+static const char *ADDRESS = "Address";
+static const char *STOP_AREA = "StopArea";
+static const char *STOP_POINT = "StopPoint";
+static const char *CITY = "City";
+static const char *SITE = "Site";
 
 class SearchModelPrivate: public AbstractModelPrivate
 {
@@ -59,17 +69,36 @@ void SearchModelPrivate::handleFinished(QNetworkReply *reply)
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll(), &error);
 
     if (error.error != QJsonParseError::NoError) {
-        qDebug() << "Failed to parse result:" << error.errorString();
+        qWarning() << "Failed to parse result:" << error.errorString();
         clearReply();
         setLoading(false);
         return;
     }
 
+    QList<QObject *> places;
     QJsonArray list = document.object().value(LIST_KEY).toArray();
     foreach (const QJsonValue &entry, list) {
-        qDebug() << entry.toObject().value("name").toString();
-    }
+        QJsonObject place = entry.toObject();
+        QString name = place.value(NAME_KEY).toString();
+        QString city = place.value(CITY_KEY).toString();
+        QString typeString = place.value(TYPE_KEY).toString();
+        Place::Type type = Place::Invalid;
 
+        if (typeString == ADDRESS) {
+            type = Place::Address;
+        } else if (typeString == STOP_AREA || typeString == STOP_POINT) {
+            type = Place::Station;
+        } else if (typeString == CITY) {
+            type = Place::City;
+        } else if (typeString == SITE) {
+            type = Place::POI;
+        }
+
+        if (type != Place::Invalid) {
+            places.append(Place::create(name, city, type, this));
+        }
+    }
+    addData(places);
     clearReply();
     setLoading(false);
 }

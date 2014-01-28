@@ -44,8 +44,6 @@ void AbstractModelPrivate::setReply(QNetworkReply *reply)
     clearReply();
     m_reply = reply;
     connect(m_reply, &QNetworkReply::finished, this, &AbstractModelPrivate::slotFinished);
-    connect(m_reply, OSIGNAL1(QNetworkReply, error, QNetworkReply::NetworkError),
-            this, &AbstractModelPrivate::slotError);
     setLoading(true);
 }
 
@@ -72,10 +70,11 @@ void AbstractModelPrivate::handleFinished(QNetworkReply *reply)
     Q_UNUSED(reply)
 }
 
-void AbstractModelPrivate::handleError(QNetworkReply *reply, QNetworkReply::NetworkError error)
+void AbstractModelPrivate::handleError(QNetworkReply *reply, QNetworkReply::NetworkError error,
+                                       const QString &errorString)
 {
     Q_UNUSED(reply)
-    qWarning() << "Error happened:" << error;
+    qWarning() << "Network error:" << error << errorString;
     clearReply();
     setLoading(false);
 }
@@ -85,6 +84,7 @@ void AbstractModelPrivate::clear()
     Q_Q(AbstractModel);
     if (m_data.count() > 0) {
         q->beginRemoveRows(QModelIndex(), 0, q->rowCount() - 1);
+        qDeleteAll(m_data);
         m_data.clear();
         q->endRemoveRows();
         emit q->countChanged();
@@ -104,12 +104,11 @@ void AbstractModelPrivate::addData(const QList<QObject *> &data)
 
 void AbstractModelPrivate::slotFinished()
 {
-    handleFinished(m_reply);
-}
-
-void AbstractModelPrivate::slotError(QNetworkReply::NetworkError error)
-{
-    handleError(m_reply, error);
+    if (m_reply->error() == QNetworkReply::NoError) {
+        handleFinished(m_reply);
+    } else {
+        handleError(m_reply, m_reply->error(), m_reply->errorString());
+    }
 }
 
 ////// End of private class //////

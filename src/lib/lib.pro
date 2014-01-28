@@ -9,15 +9,15 @@ DEFINES += VIANAVIGO_LIBRARY
 TARGET = $${NAME}
 
 HEADERS += vianavigo_global.h \
-    searchresult.h \
-    searchresult_p.h \
+    place.h \
+    place_p.h \
     abstractmodel.h \
     abstractmodel_p.h \
     searchmodel.h \
     osignal.h \
     manager.h
 
-SOURCES += searchresult.cpp \
+SOURCES += place.cpp \
     abstractmodel.cpp \
     searchmodel.cpp \
     manager.cpp

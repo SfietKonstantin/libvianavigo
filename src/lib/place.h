@@ -29,26 +29,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#ifndef SEARCHRESULT_P_H
-#define SEARCHRESULT_P_H
+#ifndef PLACE_H
+#define PLACE_H
 
-#include "searchresult.h"
+#include "vianavigo_global.h"
+#include <QtCore/QObject>
 
-class SearchResultPrivate
+class PlacePrivate;
+class VIANAVIGO_EXPORT Place: public QObject
 {
+    Q_OBJECT
+    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(QString city READ city CONSTANT)
+    Q_PROPERTY(Type type READ type CONSTANT)
+    Q_ENUMS(Type)
 public:
-    explicit SearchResultPrivate(SearchResult *q);
-    QString name;
-    QString city;
-    QString type;
-    QString typeLabel;
-    QString search;
-    QString externalCode;
-    QString cityCode;
+    enum Type {
+        Invalid,
+        Address,
+        Station,
+        City,
+        POI
+    };
+    explicit Place(QObject *parent = 0);
+    virtual ~Place();
+    static Place * create(const QString &name, const QString &city, Type type, QObject *parent = 0);
+    QString name() const;
+    QString city() const;
+    Type type() const;
+signals:
 protected:
-    SearchResult * const q_ptr;
+    explicit Place(PlacePrivate &dd, QObject *parent = 0);
+    QScopedPointer<PlacePrivate> d_ptr;
 private:
-    Q_DECLARE_PUBLIC(SearchResult)
+    Q_DECLARE_PRIVATE(Place)
 };
 
-#endif // SearchResult_P_H
+#endif // PLACE_H
