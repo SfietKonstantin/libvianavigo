@@ -50,11 +50,11 @@ public:
     void setReply(QNetworkReply *reply);
     void clearReply();
     void setLoading(bool loading);
+    void clear();
 protected:
     virtual void handleFinished(QNetworkReply *reply);
     virtual void handleError(QNetworkReply *reply, QNetworkReply::NetworkError error,
                              const QString &errorString);
-    void clear();
     void addData(const QList<QObject *> &data);
     AbstractModel * const q_ptr;
 private Q_SLOTS:

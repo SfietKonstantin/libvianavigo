@@ -125,6 +125,7 @@ void SearchModel::setText(const QString &text)
             qWarning() << "Manager is not set.";
             return;
         }
+        d->clear();
         d->setReply(d->manager->search(d->text));
     }
 }

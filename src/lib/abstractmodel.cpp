@@ -65,6 +65,18 @@ void AbstractModelPrivate::setLoading(bool loading)
     }
 }
 
+void AbstractModelPrivate::clear()
+{
+    Q_Q(AbstractModel);
+    if (m_data.count() > 0) {
+        q->beginRemoveRows(QModelIndex(), 0, q->rowCount() - 1);
+        qDeleteAll(m_data);
+        m_data.clear();
+        q->endRemoveRows();
+        emit q->countChanged();
+    }
+}
+
 void AbstractModelPrivate::handleFinished(QNetworkReply *reply)
 {
     Q_UNUSED(reply)
@@ -77,18 +89,6 @@ void AbstractModelPrivate::handleError(QNetworkReply *reply, QNetworkReply::Netw
     qWarning() << "Network error:" << error << errorString;
     clearReply();
     setLoading(false);
-}
-
-void AbstractModelPrivate::clear()
-{
-    Q_Q(AbstractModel);
-    if (m_data.count() > 0) {
-        q->beginRemoveRows(QModelIndex(), 0, q->rowCount() - 1);
-        qDeleteAll(m_data);
-        m_data.clear();
-        q->endRemoveRows();
-        emit q->countChanged();
-    }
 }
 
 void AbstractModelPrivate::addData(const QList<QObject *> &data)
