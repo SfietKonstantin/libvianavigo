@@ -1,2 +1,3 @@
 TEMPLATE = subdirs
-SUBDIRS = lib qml
+!CONFIG(selfcontained): SUBDIRS += lib
+SUBDIRS += qml

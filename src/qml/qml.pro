@@ -4,8 +4,10 @@ TEMPLATE = lib
 TARGET = $${NAME}qml
 TARGET = $$qtLibraryTarget($$TARGET)
 
+!CONFIG(selfcontained): {
 LIBS += -L../lib -l$${NAME}
 INCLUDEPATH += ../lib/
+}
 
 QT += gui qml
 CONFIG += plugin
@@ -13,8 +15,13 @@ CONFIG += plugin
 OTHER_FILES += qmldir
 import.files = qmldir
 
-import.path = $$QML_MODULE_FOLDER
-target.path = $$QML_MODULE_FOLDER
+import.path = $$QMLDIR
+target.path = $$QMLDIR
+
+CONFIG(selfcontained): {
+INCLUDEPATH += ../src
+include(../lib/lib.pri)
+}
 
 SOURCES += plugin.cpp
 

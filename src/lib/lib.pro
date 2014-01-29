@@ -8,26 +8,8 @@ DEFINES += VIANAVIGO_LIBRARY
 
 TARGET = $${NAME}
 
-HEADERS += vianavigo_global.h \
-    place.h \
-    place_p.h \
-    route.h \
-    route_p.h \
-    abstractmodel.h \
-    abstractmodel_p.h \
-    placesearchmodel.h \
-    osignal.h \
-    manager.h \
-    routesearchmodel.h
+include(lib.pri)
 
-SOURCES += place.cpp \
-    route.cpp \
-    abstractmodel.cpp \
-    placesearchmodel.cpp \
-    manager.cpp \
-    routesearchmodel.cpp
-
-TARGET = $${NAME}
 target.path = $${LIBDIR}
 
 QMAKE_PKGCONFIG_NAME = lib$$TARGET
