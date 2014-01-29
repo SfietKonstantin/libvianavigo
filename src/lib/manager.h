@@ -35,7 +35,9 @@
 #include "vianavigo_global.h"
 #include <QtCore/QObject>
 
+class QDateTime;
 class QNetworkReply;
+class Place;
 class ManagerPrivate;
 class VIANAVIGO_EXPORT Manager : public QObject
 {
@@ -43,7 +45,10 @@ class VIANAVIGO_EXPORT Manager : public QObject
 public:
     explicit Manager(QObject *parent = 0);
     virtual ~Manager();
-    QNetworkReply * search(const QString &text);
+    QNetworkReply * searchPlace(const QString &text);
+    QNetworkReply * searchRoute(const QString &departure, const QString &arrival,
+                                const QDateTime &date, const QString &modes,
+                                const QString &walkSpeed);
 protected:
     explicit Manager(ManagerPrivate &dd, QObject *parent = 0);
     const QScopedPointer<ManagerPrivate> d_ptr;

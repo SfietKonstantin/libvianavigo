@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Lucien XU <sfietkonstantin@free.fr>
+ * Copyright (C) 2014 Lucien XU <sfietkonstantin@free.fr>
  *
  * You may use this file under the terms of the BSD license as follows:
  *
@@ -33,8 +33,11 @@
 #include <QQmlEngine>
 #include <QtQml>
 
+#include "place.h"
+#include "route.h"
 #include "manager.h"
-#include "searchmodel.h"
+#include "placesearchmodel.h"
+#include "routesearchmodel.h"
 
 class Pt2Plugin : public QQmlExtensionPlugin
 {
@@ -45,8 +48,11 @@ public:
     virtual void registerTypes(const char *uri)
     {
         Q_ASSERT(QLatin1String(uri) == QLatin1String("org.SfietKonstantin.vianavigo"));
+        qmlRegisterType<Place>(uri, 1, 0, "Place");
+        qmlRegisterType<Route>(uri, 1, 0, "Route");
         qmlRegisterType<Manager>(uri, 1, 0, "Manager");
-        qmlRegisterType<SearchModel>(uri, 1, 0, "SearchModel");
+        qmlRegisterType<PlaceSearchModel>(uri, 1, 0, "PlaceSearchModel");
+        qmlRegisterType<PlaceSearchModel>(uri, 1, 0, "RouteSearchModel");
     }
 };
 

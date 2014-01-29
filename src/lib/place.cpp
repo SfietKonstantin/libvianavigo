@@ -32,6 +32,12 @@
 #include "place.h"
 #include "place_p.h"
 
+static const char *ADDRESS = "Address";
+static const char *STOP_AREA = "StopArea";
+static const char *STOP_POINT = "StopPoint";
+static const char *CITY = "City";
+static const char *SITE = "Site";
+
 PlacePrivate::PlacePrivate(Place *q):
     q_ptr(q)
 {
@@ -58,6 +64,22 @@ Place * Place::create(const QString &name, const QString &city, Type type, QObje
     returned->d_func()->city = city;
     returned->d_func()->type = type;
     return returned;
+}
+
+Place::Type Place::typeFromString(const QString &type)
+{
+    Place::Type returnedType = Place::Invalid;
+    if (type == ADDRESS) {
+        returnedType = Place::Address;
+    } else if (type == STOP_AREA || type == STOP_POINT) {
+        returnedType = Place::Station;
+    } else if (type == CITY) {
+        returnedType = Place::City;
+    } else if (type == SITE) {
+        returnedType = Place::POI;
+    }
+
+    return returnedType;
 }
 
 QString Place::name() const

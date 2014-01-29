@@ -29,40 +29,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#ifndef PLACE_H
-#define PLACE_H
+#include "route.h"
+#include "route_p.h"
 
-#include "vianavigo_global.h"
-#include <QtCore/QObject>
-
-class PlacePrivate;
-class VIANAVIGO_EXPORT Place: public QObject
+RoutePrivate::RoutePrivate(Route *q):
+    from(0), to(0), q_ptr(q)
 {
-    Q_OBJECT
-    Q_PROPERTY(QString name READ name CONSTANT)
-    Q_PROPERTY(QString city READ city CONSTANT)
-    Q_PROPERTY(Type type READ type CONSTANT)
-    Q_ENUMS(Type)
-public:
-    enum Type {
-        Invalid,
-        Address,
-        Station,
-        City,
-        POI
-    };
-    explicit Place(QObject *parent = 0);
-    virtual ~Place();
-    static Place * create(const QString &name, const QString &city, Type type, QObject *parent = 0);
-    static Type typeFromString(const QString &type);
-    QString name() const;
-    QString city() const;
-    Type type() const;
-protected:
-    explicit Place(PlacePrivate &dd, QObject *parent = 0);
-    QScopedPointer<PlacePrivate> d_ptr;
-private:
-    Q_DECLARE_PRIVATE(Place)
-};
+}
 
-#endif // PLACE_H
+Route::Route(QObject *parent)
+    : QObject(parent), d_ptr(new RoutePrivate(this))
+{
+}
+
+Route::Route(RoutePrivate &dd, QObject *parent)
+    : QObject(parent), d_ptr(&dd)
+{
+}
+
+Route::~Route()
+{
+}
+
+Route * Route::create(Place *from, Place *to, QObject *parent)
+{
+    Route * returned = new Route(parent);
+    returned->d_func()->from = from;
+    returned->d_func()->to = to;
+    return returned;
+}
+
+Place * Route::from() const
+{
+    Q_D(const Route);
+    return d->from;
+}
+
+Place * Route::to() const
+{
+    Q_D(const Route);
+    return d->to;
+}
+

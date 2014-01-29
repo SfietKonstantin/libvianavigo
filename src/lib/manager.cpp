@@ -30,16 +30,34 @@
  */
 
 #include "manager.h"
+#include <QtCore/QUrlQuery>
+#include <QtCore/QDateTime>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 
 static const char *VIANAVIGO_API = "http://www.vianavigo.com/stif_web_carto/rest/";
-static const char *VIANAVIGO_SEARCH = "searchPoints/";
+static const char *VIANAVIGO_PLACE = "searchPoints/";
+static const char *VIANAVIGO_ROUTE = "itinerarySearch/";
+static const char *DEPARTURE_KEY = "departure";
+static const char *DEPARTURE_TYPE_KEY = "departureType";
+static const char *ARRIVAL_KEY = "arrival";
+static const char *ARRIVAL_TYPE_KEY = "arrivalType";
+static const char *DATE_TYPE_KEY = "dateType"; // Seems to be set to 1 for timed search -1 otherwise
+static const char *DATE_KEY = "date";
+static const char *MODES_KEY = "modes";
+static const char *WALK_SPEED_KEY = "walkSpeed";
+
+static const char *DATE_FORMAT = "yyyy-MM-ddThh:mm";
+static const char *DATE_TYPE = "1";
 
 class ManagerPrivate
 {
 public:
     explicit ManagerPrivate(Manager *q);
+    static QUrl getSearchRouteUrl(const QString &departure, const QString &departureType,
+                                  const QString &arrival, const QString &arrivalType,
+                                  const QDateTime &date, const QString &modes,
+                                  const QString &walkSpeed);
     QNetworkAccessManager *networkAccessManager;
 protected:
     Manager * const q_ptr;
@@ -50,6 +68,36 @@ private:
 ManagerPrivate::ManagerPrivate(Manager *q)
     : networkAccessManager(0), q_ptr(q)
 {
+}
+
+QUrl ManagerPrivate::getSearchRouteUrl(const QString &departure, const QString &departureType,
+                                       const QString &arrival, const QString &arrivalType,
+                                       const QDateTime &date, const QString &modes,
+                                       const QString &walkSpeed)
+{
+    if (departure.isEmpty() || arrival.isEmpty() || date.isNull() || modes.size() != 5
+        || walkSpeed.size() != 1) {
+        return QUrl();
+    }
+
+    QString path = VIANAVIGO_API;
+    path.append(VIANAVIGO_ROUTE);
+    QUrl url (path);
+    QUrlQuery query;
+    query.addQueryItem(DEPARTURE_KEY, departure);
+    if (!departureType.isEmpty()) {
+        query.addQueryItem(DEPARTURE_TYPE_KEY, departureType);
+    }
+    query.addQueryItem(ARRIVAL_KEY, arrival);
+    if (!arrivalType.isEmpty()) {
+        query.addQueryItem(ARRIVAL_TYPE_KEY, arrivalType);
+    }
+    query.addQueryItem(DATE_TYPE_KEY, DATE_TYPE);
+    query.addQueryItem(DATE_KEY, date.toString(DATE_FORMAT));
+    query.addQueryItem(MODES_KEY, modes);
+    query.addQueryItem(WALK_SPEED_KEY, walkSpeed);
+    url.setQuery(query);
+    return url;
 }
 
 Manager::Manager(QObject *parent) :
@@ -70,12 +118,25 @@ Manager::~Manager()
 {
 }
 
-QNetworkReply * Manager::search(const QString &text)
+QNetworkReply * Manager::searchPlace(const QString &text)
 {
     Q_D(Manager);
     QString path = VIANAVIGO_API;
-    path.append(VIANAVIGO_SEARCH);
+    path.append(VIANAVIGO_PLACE);
     path.append(QUrl::toPercentEncoding(text));
 
     return d->networkAccessManager->get(QNetworkRequest(QUrl(path)));
+}
+
+QNetworkReply * Manager::searchRoute(const QString &departure, const QString &arrival,
+                                     const QDateTime &date, const QString &modes,
+                                     const QString &walkSpeed)
+{
+    Q_D(Manager);
+    QUrl url = ManagerPrivate::getSearchRouteUrl(departure, QString(), arrival, QString(), date,
+                                                 modes, walkSpeed);
+    if (!url.isEmpty()) {
+        return d->networkAccessManager->get(QNetworkRequest(url));
+    }
+    return 0;
 }

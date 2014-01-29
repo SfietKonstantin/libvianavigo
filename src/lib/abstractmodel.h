@@ -39,16 +39,23 @@ class AbstractModelPrivate;
 class AbstractModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(bool loading READ isLoading NOTIFY loadingChanged)
+    Q_PROPERTY(Status status READ status NOTIFY statusChanged)
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(Manager * manager READ manager WRITE setManager NOTIFY managerChanged)
+    Q_ENUMS(Status)
 public:
+    enum Status {
+        Idle,
+        Loading,
+        Error
+    };
+
     enum Role {
         DataRole
     };
     virtual ~AbstractModel();
     QHash<int, QByteArray> roleNames() const;
-    bool isLoading() const;
+    Status status() const;
     int count() const;
     Manager * manager() const;
     void setManager(Manager *manager);
@@ -56,7 +63,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 Q_SIGNALS:
     void managerChanged();
-    void loadingChanged();
+    void statusChanged();
     void countChanged();
 protected:
     explicit AbstractModel(AbstractModelPrivate &dd, QObject *parent = 0);

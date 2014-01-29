@@ -32,15 +32,11 @@
 #ifndef ABSTRACTMODEL_P_H
 #define ABSTRACTMODEL_P_H
 
-#include <QtCore/QObject>
-#include <QtCore/QMap>
-#include <QtCore/QVariant>
-#include <QtCore/QSet>
+#include "abstractmodel.h"
 #include <QtNetwork/QNetworkReply>
 
 class Manager;
 class QNetworkReply;
-class AbstractModel;
 class AbstractModelPrivate: public QObject
 {
     Q_OBJECT
@@ -49,7 +45,7 @@ public:
     Manager *manager;
     void setReply(QNetworkReply *reply);
     void clearReply();
-    void setLoading(bool loading);
+    void setStatus(AbstractModel::Status status);
     void clear();
 protected:
     virtual void handleFinished(QNetworkReply *reply);
@@ -60,7 +56,7 @@ protected:
 private Q_SLOTS:
     void slotFinished();
 private:
-    bool m_loading;
+    AbstractModel::Status m_status;
     QNetworkReply *m_reply;
     QList<QObject *> m_data;
     Q_DECLARE_PUBLIC(AbstractModel)

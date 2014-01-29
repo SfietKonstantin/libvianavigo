@@ -29,41 +29,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#include "searchmodel.h"
+#include "placesearchmodel.h"
 #include "abstractmodel_p.h"
+#include "place.h"
 #include <QtCore/QDebug>
 #include <QtCore/QJsonDocument>
+#include <QtCore/QJsonParseError>
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>
-#include <QtCore/QJsonParseError>
-#include "place.h"
+
+static const int MIN_TEXT_SIZE = 3;
 
 static const char *LIST_KEY = "list";
 static const char *NAME_KEY = "name";
 static const char *CITY_KEY = "city";
 static const char *TYPE_KEY = "type";
 
-static const char *ADDRESS = "Address";
-static const char *STOP_AREA = "StopArea";
-static const char *STOP_POINT = "StopPoint";
-static const char *CITY = "City";
-static const char *SITE = "Site";
-
-class SearchModelPrivate: public AbstractModelPrivate
+class PlaceSearchModelPrivate: public AbstractModelPrivate
 {
 public:
-    explicit SearchModelPrivate(SearchModel *q);
+    explicit PlaceSearchModelPrivate(PlaceSearchModel *q);
     QString text;
 protected:
     void handleFinished(QNetworkReply *reply);
 };
 
-SearchModelPrivate::SearchModelPrivate(SearchModel *q)
+PlaceSearchModelPrivate::PlaceSearchModelPrivate(PlaceSearchModel *q)
     : AbstractModelPrivate(q)
 {
 }
 
-void SearchModelPrivate::handleFinished(QNetworkReply *reply)
+void PlaceSearchModelPrivate::handleFinished(QNetworkReply *reply)
 {
     QJsonParseError error;
     QJsonDocument document = QJsonDocument::fromJson(reply->readAll(), &error);
@@ -71,7 +67,7 @@ void SearchModelPrivate::handleFinished(QNetworkReply *reply)
     if (error.error != QJsonParseError::NoError) {
         qWarning() << "Failed to parse result:" << error.errorString();
         clearReply();
-        setLoading(false);
+        setStatus(AbstractModel::Error);
         return;
     }
 
@@ -81,18 +77,7 @@ void SearchModelPrivate::handleFinished(QNetworkReply *reply)
         QJsonObject place = entry.toObject();
         QString name = place.value(NAME_KEY).toString();
         QString city = place.value(CITY_KEY).toString();
-        QString typeString = place.value(TYPE_KEY).toString();
-        Place::Type type = Place::Invalid;
-
-        if (typeString == ADDRESS) {
-            type = Place::Address;
-        } else if (typeString == STOP_AREA || typeString == STOP_POINT) {
-            type = Place::Station;
-        } else if (typeString == CITY) {
-            type = Place::City;
-        } else if (typeString == SITE) {
-            type = Place::POI;
-        }
+        Place::Type type = Place::typeFromString(place.value(TYPE_KEY).toString());
 
         if (type != Place::Invalid) {
             places.append(Place::create(name, city, type, this));
@@ -100,23 +85,23 @@ void SearchModelPrivate::handleFinished(QNetworkReply *reply)
     }
     addData(places);
     clearReply();
-    setLoading(false);
+    setStatus(AbstractModel::Idle);
 }
 
-SearchModel::SearchModel(QObject *parent) :
-    AbstractModel(*(new SearchModelPrivate(this)), parent)
+PlaceSearchModel::PlaceSearchModel(QObject *parent) :
+    AbstractModel(*(new PlaceSearchModelPrivate(this)), parent)
 {
 }
 
-QString SearchModel::text() const
+QString PlaceSearchModel::text() const
 {
-    Q_D(const SearchModel);
+    Q_D(const PlaceSearchModel);
     return d->text;
 }
 
-void SearchModel::setText(const QString &text)
+void PlaceSearchModel::setText(const QString &text)
 {
-    Q_D(SearchModel);
+    Q_D(PlaceSearchModel);
     if (d->text != text) {
         d->text = text;
         emit textChanged();
@@ -125,8 +110,12 @@ void SearchModel::setText(const QString &text)
             qWarning() << "Manager is not set.";
             return;
         }
+
         d->clear();
-        d->setReply(d->manager->search(d->text));
+        if (d->text.trimmed().size() < MIN_TEXT_SIZE) {
+            return;
+        }
+        d->setReply(d->manager->searchPlace(d->text.trimmed()));
     }
 }
 

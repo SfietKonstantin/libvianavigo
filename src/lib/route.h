@@ -29,40 +29,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#ifndef PLACE_H
-#define PLACE_H
+#ifndef ROUTE_H
+#define ROUTE_H
 
 #include "vianavigo_global.h"
 #include <QtCore/QObject>
+#include "place.h"
 
-class PlacePrivate;
-class VIANAVIGO_EXPORT Place: public QObject
+class RoutePrivate;
+class VIANAVIGO_EXPORT Route: public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ name CONSTANT)
-    Q_PROPERTY(QString city READ city CONSTANT)
-    Q_PROPERTY(Type type READ type CONSTANT)
-    Q_ENUMS(Type)
+    Q_PROPERTY(Place * from READ from CONSTANT)
+    Q_PROPERTY(Place * to READ to CONSTANT)
 public:
-    enum Type {
-        Invalid,
-        Address,
-        Station,
-        City,
-        POI
-    };
-    explicit Place(QObject *parent = 0);
-    virtual ~Place();
-    static Place * create(const QString &name, const QString &city, Type type, QObject *parent = 0);
-    static Type typeFromString(const QString &type);
-    QString name() const;
-    QString city() const;
-    Type type() const;
+    explicit Route(QObject *parent = 0);
+    virtual ~Route();
+    static Route * create(Place *from, Place *to, QObject *parent = 0);
+    Place * from() const;
+    Place * to() const;
+signals:
 protected:
-    explicit Place(PlacePrivate &dd, QObject *parent = 0);
-    QScopedPointer<PlacePrivate> d_ptr;
+    explicit Route(RoutePrivate &dd, QObject *parent = 0);
+    QScopedPointer<RoutePrivate> d_ptr;
 private:
-    Q_DECLARE_PRIVATE(Place)
+    Q_DECLARE_PRIVATE(Route)
 };
 
-#endif // PLACE_H
+#endif // ROUTE_H

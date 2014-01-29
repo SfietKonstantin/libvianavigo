@@ -29,40 +29,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#ifndef PLACE_H
-#define PLACE_H
+#ifndef PLACESEARCHMODEL_H
+#define PLACESEARCHMODEL_H
 
 #include "vianavigo_global.h"
-#include <QtCore/QObject>
+#include "abstractmodel.h"
 
-class PlacePrivate;
-class VIANAVIGO_EXPORT Place: public QObject
+class PlaceSearchModelPrivate;
+class VIANAVIGO_EXPORT PlaceSearchModel : public AbstractModel
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ name CONSTANT)
-    Q_PROPERTY(QString city READ city CONSTANT)
-    Q_PROPERTY(Type type READ type CONSTANT)
-    Q_ENUMS(Type)
+    Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
 public:
-    enum Type {
-        Invalid,
-        Address,
-        Station,
-        City,
-        POI
-    };
-    explicit Place(QObject *parent = 0);
-    virtual ~Place();
-    static Place * create(const QString &name, const QString &city, Type type, QObject *parent = 0);
-    static Type typeFromString(const QString &type);
-    QString name() const;
-    QString city() const;
-    Type type() const;
-protected:
-    explicit Place(PlacePrivate &dd, QObject *parent = 0);
-    QScopedPointer<PlacePrivate> d_ptr;
+    explicit PlaceSearchModel(QObject *parent = 0);
+    QString text() const;
+    void setText(const QString &text);
+Q_SIGNALS:
+    void textChanged();
 private:
-    Q_DECLARE_PRIVATE(Place)
+    Q_DECLARE_PRIVATE(PlaceSearchModel)
 };
 
-#endif // PLACE_H
+#endif // PLACESEARCHMODEL_H

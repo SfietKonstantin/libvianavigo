@@ -35,7 +35,7 @@
 #include <QtCore/QDebug>
 
 AbstractModelPrivate::AbstractModelPrivate(AbstractModel *q)
-    : QObject(), manager(0), q_ptr(q), m_loading(false), m_reply(0)
+    : QObject(), manager(0), q_ptr(q), m_status(AbstractModel::Idle), m_reply(0)
 {
 }
 
@@ -44,7 +44,7 @@ void AbstractModelPrivate::setReply(QNetworkReply *reply)
     clearReply();
     m_reply = reply;
     connect(m_reply, &QNetworkReply::finished, this, &AbstractModelPrivate::slotFinished);
-    setLoading(true);
+    setStatus(AbstractModel::Loading);
 }
 
 void AbstractModelPrivate::clearReply()
@@ -56,12 +56,12 @@ void AbstractModelPrivate::clearReply()
     }
 }
 
-void AbstractModelPrivate::setLoading(bool loading)
+void AbstractModelPrivate::setStatus(AbstractModel::Status status)
 {
     Q_Q(AbstractModel);
-    if (m_loading != loading) {
-        m_loading = loading;
-        emit q->loadingChanged();
+    if (m_status != status) {
+        m_status = status;
+        emit q->statusChanged();
     }
 }
 
@@ -88,7 +88,7 @@ void AbstractModelPrivate::handleError(QNetworkReply *reply, QNetworkReply::Netw
     Q_UNUSED(reply)
     qWarning() << "Network error:" << error << errorString;
     clearReply();
-    setLoading(false);
+    setStatus(AbstractModel::Error);
 }
 
 void AbstractModelPrivate::addData(const QList<QObject *> &data)
@@ -131,10 +131,10 @@ QHash<int, QByteArray> AbstractModel::roleNames() const
     return roles;
 }
 
-bool AbstractModel::isLoading() const
+AbstractModel::Status AbstractModel::status() const
 {
     Q_D(const AbstractModel);
-    return d->m_loading;
+    return d->m_status;
 }
 
 int AbstractModel::count() const

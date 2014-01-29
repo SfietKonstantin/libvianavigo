@@ -29,25 +29,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#ifndef SEARCHMODEL_H
-#define SEARCHMODEL_H
+#ifndef ROUTE_P_H
+#define ROUTE_P_H
 
-#include "vianavigo_global.h"
-#include "abstractmodel.h"
+#include "route.h"
 
-class SearchModelPrivate;
-class VIANAVIGO_EXPORT SearchModel : public AbstractModel
+class RoutePrivate
 {
-    Q_OBJECT
-    Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
 public:
-    explicit SearchModel(QObject *parent = 0);
-    QString text() const;
-    void setText(const QString &text);
-Q_SIGNALS:
-    void textChanged();
+    explicit RoutePrivate(Route *q);
+    Place * from;
+    Place * to;
+protected:
+    Route * const q_ptr;
 private:
-    Q_DECLARE_PRIVATE(SearchModel)
+    Q_DECLARE_PUBLIC(Route)
 };
 
-#endif // SEARCHMODEL_H
+#endif // Route_P_H
