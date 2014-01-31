@@ -61,6 +61,7 @@ public:
     void setManager(Manager *manager);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    Q_INVOKABLE QVariant getData(int row);
 Q_SIGNALS:
     void managerChanged();
     void statusChanged();

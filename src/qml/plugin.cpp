@@ -39,7 +39,7 @@
 #include "placesearchmodel.h"
 #include "routesearchmodel.h"
 
-class Pt2Plugin : public QQmlExtensionPlugin
+class ViaNavigoPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.SfietKonstantin.vianavigo")

@@ -181,4 +181,14 @@ QVariant AbstractModel::data(const QModelIndex &index, int role) const
     }
 }
 
+QVariant AbstractModel::getData(int row)
+{
+    Q_D(const AbstractModel);
+    if (row < 0 or row >= rowCount()) {
+        return QVariant();
+    }
+
+    return QVariant::fromValue(d->m_data.at(row));
+}
+
 

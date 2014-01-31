@@ -4,9 +4,9 @@ TEMPLATE = lib
 TARGET = $${NAME}qml
 TARGET = $$qtLibraryTarget($$TARGET)
 
+INCLUDEPATH += ../lib/
 !CONFIG(selfcontained): {
 LIBS += -L../lib -l$${NAME}
-INCLUDEPATH += ../lib/
 }
 
 QT += gui qml
@@ -19,7 +19,6 @@ import.path = $$QMLDIR
 target.path = $$QMLDIR
 
 CONFIG(selfcontained): {
-INCLUDEPATH += ../src
 include(../lib/lib.pri)
 }
 
