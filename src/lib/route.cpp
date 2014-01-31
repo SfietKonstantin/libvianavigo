@@ -59,6 +59,14 @@ Route * Route::create(Place *from, Place *to, QObject *parent)
     return returned;
 }
 
+Route * Route::copy(Route *route, QObject *parent)
+{
+    Route * returned = new Route(parent);
+    returned->d_func()->from = route->d_func()->from;
+    returned->d_func()->to = route->d_func()->to;
+    return returned;
+}
+
 Place * Route::from() const
 {
     Q_D(const Route);

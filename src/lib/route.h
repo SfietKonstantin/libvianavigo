@@ -46,6 +46,7 @@ public:
     explicit Route(QObject *parent = 0);
     virtual ~Route();
     static Route * create(Place *from, Place *to, QObject *parent = 0);
+    static Route * copy(Route *route, QObject *parent = 0);
     Place * from() const;
     Place * to() const;
 signals:

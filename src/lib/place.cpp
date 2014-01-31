@@ -66,6 +66,15 @@ Place * Place::create(const QString &name, const QString &city, Type type, QObje
     return returned;
 }
 
+Place * Place::copy(Place *place, QObject *parent)
+{
+    Place * returned = new Place(parent);
+    returned->d_func()->name = place->d_func()->name;
+    returned->d_func()->city = place->d_func()->city;
+    returned->d_func()->type = place->d_func()->type;
+    return returned;
+}
+
 Place::Type Place::typeFromString(const QString &type)
 {
     Place::Type returnedType = Place::Invalid;

@@ -54,6 +54,7 @@ public:
     explicit Place(QObject *parent = 0);
     virtual ~Place();
     static Place * create(const QString &name, const QString &city, Type type, QObject *parent = 0);
+    static Place * copy(Place *place, QObject *parent = 0);
     static Type typeFromString(const QString &type);
     QString name() const;
     QString city() const;
