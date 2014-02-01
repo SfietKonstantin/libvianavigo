@@ -128,13 +128,14 @@ QNetworkReply * Manager::searchPlace(const QString &text)
     return d->networkAccessManager->get(QNetworkRequest(QUrl(path)));
 }
 
-QNetworkReply * Manager::searchRoute(const QString &departure, const QString &arrival,
+QNetworkReply * Manager::searchRoute(const QString &departure, const QString &departureType,
+                                     const QString &arrival, const QString &arrivalType,
                                      const QDateTime &date, const QString &modes,
                                      const QString &walkSpeed)
 {
     Q_D(Manager);
-    QUrl url = ManagerPrivate::getSearchRouteUrl(departure, QString(), arrival, QString(), date,
-                                                 modes, walkSpeed);
+    QUrl url = ManagerPrivate::getSearchRouteUrl(departure, departureType, arrival, arrivalType,
+                                                 date, modes, walkSpeed);
     if (!url.isEmpty()) {
         return d->networkAccessManager->get(QNetworkRequest(url));
     }

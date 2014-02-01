@@ -259,7 +259,7 @@ void RouteSearchModel::search()
     }
 
     if (!d->arrival) {
-        qWarning() << "Departure place is not set";
+        qWarning() << "Arrival place is not set";
         return;
     }
 
@@ -268,7 +268,8 @@ void RouteSearchModel::search()
         return;
     }
 
-    QNetworkReply *reply = d->manager->searchRoute(d->departure->name(), d->arrival->name(),
+    QNetworkReply *reply = d->manager->searchRoute(d->departure->name(), d->departure->typeString(),
+                                                   d->arrival->name(), d->arrival->typeString(),
                                                    d->date, d->modesToString(),
                                                    QString::number(d->walkSpeed));
     if (reply) {

@@ -77,10 +77,11 @@ void PlaceSearchModelPrivate::handleFinished(QNetworkReply *reply)
         QJsonObject place = entry.toObject();
         QString name = place.value(NAME_KEY).toString();
         QString city = place.value(CITY_KEY).toString();
-        Place::Type type = Place::typeFromString(place.value(TYPE_KEY).toString());
+        QString typeString = place.value(TYPE_KEY).toString();
+        Place::Type type = Place::typeFromString(typeString);
 
         if (type != Place::Invalid) {
-            places.append(Place::create(name, city, type, this));
+            places.append(Place::create(name, city, typeString, this));
         }
     }
     addData(places);

@@ -46,7 +46,8 @@ public:
     explicit Manager(QObject *parent = 0);
     virtual ~Manager();
     QNetworkReply * searchPlace(const QString &text);
-    QNetworkReply * searchRoute(const QString &departure, const QString &arrival,
+    QNetworkReply * searchRoute(const QString &departure, const QString &departureType,
+                                const QString &arrival, const QString &arrivalType,
                                 const QDateTime &date, const QString &modes,
                                 const QString &walkSpeed);
 protected:

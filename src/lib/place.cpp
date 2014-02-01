@@ -57,12 +57,14 @@ Place::~Place()
 {
 }
 
-Place * Place::create(const QString &name, const QString &city, Type type, QObject *parent)
+Place * Place::create(const QString &name, const QString &city, const QString &type,
+                      QObject *parent)
 {
     Place * returned = new Place(parent);
     returned->d_func()->name = name;
     returned->d_func()->city = city;
-    returned->d_func()->type = type;
+    returned->d_func()->type = typeFromString(type);
+    returned->d_func()->typeString = type;
     return returned;
 }
 
@@ -72,6 +74,7 @@ Place * Place::copy(Place *place, QObject *parent)
     returned->d_func()->name = place->d_func()->name;
     returned->d_func()->city = place->d_func()->city;
     returned->d_func()->type = place->d_func()->type;
+    returned->d_func()->typeString = place->d_func()->typeString;
     return returned;
 }
 
@@ -109,3 +112,8 @@ Place::Type Place::type() const
     return d->type;
 }
 
+QString Place::typeString() const
+{
+    Q_D(const Place);
+    return d->typeString;
+}

@@ -41,6 +41,7 @@ public:
     QString name;
     QString city;
     Place::Type type;
+    QString typeString;
 protected:
     Place * const q_ptr;
 private:
