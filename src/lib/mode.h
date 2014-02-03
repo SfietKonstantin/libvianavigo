@@ -29,33 +29,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#include <QQmlExtensionPlugin>
-#include <QQmlEngine>
-#include <QtQml>
+#ifndef MODE_H
+#define MODE_H
 
-#include "place.h"
-#include "route.h"
-#include "manager.h"
-#include "placesearchmodel.h"
-#include "routesearchmodel.h"
+#include "vianavigo_global.h"
+#include <QtCore/QObject>
+#include <QtCore/QString>
 
-class ViaNavigoPlugin : public QQmlExtensionPlugin
+class ModePrivate;
+class VIANAVIGO_EXPORT Mode: public QObject
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.SfietKonstantin.vianavigo")
-
+    Q_PROPERTY(Type type READ type CONSTANT)
+    Q_PROPERTY(QString line READ line CONSTANT)
+    Q_PROPERTY(QString externalCode READ externalCode CONSTANT)
 public:
-    virtual void registerTypes(const char *uri)
-    {
-        Q_ASSERT(QLatin1String(uri) == QLatin1String("org.SfietKonstantin.vianavigo"));
-        qmlRegisterType<Place>(uri, 1, 0, "Place");
-        qmlRegisterType<Route>(uri, 1, 0, "Route");
-        qmlRegisterType<Mode>(uri, 1, 0, "Mode");
-        qmlRegisterType<Manager>(uri, 1, 0, "Manager");
-        qmlRegisterType<PlaceSearchModel>(uri, 1, 0, "PlaceSearchModel");
-        qmlRegisterType<PlaceSearchModel>(uri, 1, 0, "RouteSearchModel");
-    }
+    enum Type {
+        Invalid,
+        Bus,
+        Metro,
+        Rer,
+        Ter,
+        Train,
+        Tram,
+        TZen,
+        Val,
+        Walking,
+        Waiting
+    };
+    explicit Mode(QObject *parent = 0);
+    virtual ~Mode();
+    static Mode * create(const QString &type, const QString &line, QString externalCode, QObject *parent = 0);
+    static Mode * copy(Mode *other, QObject *parent = 0);
+    static Type typeFromString(const QString &type);
+    Type type() const;
+    QString typeString() const;
+    QString line() const;
+    QString externalCode() const;
+Q_SIGNALS:
+protected:
+    explicit Mode(ModePrivate &dd, QObject *parent = 0);
+    QScopedPointer<ModePrivate> d_ptr;
+private:
+    Q_DECLARE_PRIVATE(Mode)
 };
 
-#include "plugin.moc"
-
+#endif // MODE_H

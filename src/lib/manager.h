@@ -45,6 +45,7 @@ class VIANAVIGO_EXPORT Manager : public QObject
 public:
     explicit Manager(QObject *parent = 0);
     virtual ~Manager();
+    static QDateTime getDate(const QString &date);
     QNetworkReply * searchPlace(const QString &text);
     QNetworkReply * searchRoute(const QString &departure, const QString &departureType,
                                 const QString &arrival, const QString &arrivalType,

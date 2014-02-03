@@ -40,10 +40,15 @@ public:
     explicit RoutePrivate(Route *q);
     Place * from;
     Place * to;
+    QDateTime departureDate;
+    QDateTime arrivalDate;
+    int totalTime;
+    int walkingTime;
+    QList<Mode *> modes;
 protected:
     Route * const q_ptr;
 private:
     Q_DECLARE_PUBLIC(Route)
 };
 
-#endif // Route_P_H
+#endif // ROUTE_P_H

@@ -118,6 +118,11 @@ Manager::~Manager()
 {
 }
 
+QDateTime Manager::getDate(const QString &date)
+{
+    return QDateTime::fromString(date, DATE_FORMAT);
+}
+
 QNetworkReply * Manager::searchPlace(const QString &text)
 {
     Q_D(Manager);

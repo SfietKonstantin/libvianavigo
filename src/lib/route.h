@@ -34,7 +34,9 @@
 
 #include "vianavigo_global.h"
 #include <QtCore/QObject>
+#include <QtCore/QDateTime>
 #include "place.h"
+#include "mode.h"
 
 class RoutePrivate;
 class VIANAVIGO_EXPORT Route: public QObject
@@ -42,14 +44,26 @@ class VIANAVIGO_EXPORT Route: public QObject
     Q_OBJECT
     Q_PROPERTY(Place * from READ from CONSTANT)
     Q_PROPERTY(Place * to READ to CONSTANT)
+    Q_PROPERTY(QDateTime departureDate READ departureDate CONSTANT)
+    Q_PROPERTY(QDateTime arrivalDate READ arrivalDate CONSTANT)
+    Q_PROPERTY(int totalTime READ totalTime CONSTANT)
+    Q_PROPERTY(int walkingTime READ walkingTime CONSTANT)
+    Q_PROPERTY(QList<Mode *> modes READ modes CONSTANT)
 public:
     explicit Route(QObject *parent = 0);
     virtual ~Route();
-    static Route * create(Place *from, Place *to, QObject *parent = 0);
-    static Route * copy(Route *route, QObject *parent = 0);
+    static Route * create(Place *from, Place *to, const QDateTime &departureDate,
+                          const QDateTime &arrivalDate, int totalTime, int walkingTime,
+                          QList<Mode *> &modes, QObject *parent = 0);
+    static Route * copy(Route *other, QObject *parent = 0);
     Place * from() const;
     Place * to() const;
-signals:
+    QDateTime departureDate() const;
+    QDateTime arrivalDate() const;
+    int totalTime() const;
+    int walkingTime() const;
+    QList<Mode *> modes() const;
+Q_SIGNALS:
 protected:
     explicit Route(RoutePrivate &dd, QObject *parent = 0);
     QScopedPointer<RoutePrivate> d_ptr;

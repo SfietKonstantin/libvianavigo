@@ -41,6 +41,14 @@
 static const char *USE = "1";
 static const char *DONT_USE = "0";
 static const char *RESULTS_KEY = "results";
+static const char *DEPARTURE_TIME_KEY = "depart";
+static const char *ARRIVAL_TIME_KEY = "arrivee";
+static const char *DEPARTURE_NAME_KEY = "nomDepart";
+static const char *DEPARTURE_TYPE_KEY = "departType";
+static const char *ARRIVAL_NAME_KEY = "nomArrivee";
+static const char *ARRIVAL_TYPE_KEY = "arriveeType";
+static const char *TOTAL_TIME_KEY = "duree";
+static const char *WALKING_TIME_KEY = "MAP";
 
 class RouteSearchModelPrivate: public AbstractModelPrivate
 {
@@ -95,12 +103,29 @@ void RouteSearchModelPrivate::handleFinished(QNetworkReply *reply)
         return;
     }
 
-    QList<QObject *> places;
+    QList<QObject *> routes;
     QJsonArray list = document.object().value(RESULTS_KEY).toArray();
     foreach (const QJsonValue &entry, list) {
-        qDebug() << entry;
+        QJsonObject route = entry.toObject();
+        QString departureTime = route.value(DEPARTURE_TIME_KEY).toString();
+        QString departureName = route.value(DEPARTURE_NAME_KEY).toString();
+        QString departureType = route.value(DEPARTURE_TYPE_KEY).toString();
+
+        QString arrivalTime = route.value(ARRIVAL_TIME_KEY).toString();
+        QString arrivalName = route.value(ARRIVAL_NAME_KEY).toString();
+        QString arrivalType = route.value(ARRIVAL_TYPE_KEY).toString();
+
+        int totalTime = route.value(TOTAL_TIME_KEY).toInt();
+        int walkingTime = route.value(WALKING_TIME_KEY).toInt();
+
+        QList<Mode *> modes;
+
+        routes.append(Route::create(Place::create(departureName, QString(), departureType),
+                                    Place::create(arrivalName, QString(), arrivalType),
+                                    Manager::getDate(departureTime), Manager::getDate(arrivalTime),
+                                    totalTime, walkingTime, modes, this));
     }
-    addData(places);
+    addData(routes);
     clearReply();
     setStatus(AbstractModel::Idle);
 }

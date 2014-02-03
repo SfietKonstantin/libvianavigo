@@ -29,33 +29,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#include <QQmlExtensionPlugin>
-#include <QQmlEngine>
-#include <QtQml>
+#ifndef MODE_P_H
+#define MODE_P_H
 
-#include "place.h"
-#include "route.h"
-#include "manager.h"
-#include "placesearchmodel.h"
-#include "routesearchmodel.h"
+#include "mode.h"
 
-class ViaNavigoPlugin : public QQmlExtensionPlugin
+class ModePrivate
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.SfietKonstantin.vianavigo")
-
 public:
-    virtual void registerTypes(const char *uri)
-    {
-        Q_ASSERT(QLatin1String(uri) == QLatin1String("org.SfietKonstantin.vianavigo"));
-        qmlRegisterType<Place>(uri, 1, 0, "Place");
-        qmlRegisterType<Route>(uri, 1, 0, "Route");
-        qmlRegisterType<Mode>(uri, 1, 0, "Mode");
-        qmlRegisterType<Manager>(uri, 1, 0, "Manager");
-        qmlRegisterType<PlaceSearchModel>(uri, 1, 0, "PlaceSearchModel");
-        qmlRegisterType<PlaceSearchModel>(uri, 1, 0, "RouteSearchModel");
-    }
+    explicit ModePrivate(Mode *q);
+    Mode::Type type;
+    QString typeString;
+    QString line;
+    QString externalCode;
+protected:
+    Mode * const q_ptr;
+private:
+    Q_DECLARE_PUBLIC(Mode)
 };
 
-#include "plugin.moc"
-
+#endif // MODE_P_H

@@ -33,17 +33,17 @@
 #include "route_p.h"
 
 RoutePrivate::RoutePrivate(Route *q):
-    from(0), to(0), q_ptr(q)
+    q_ptr(q)
 {
 }
 
-Route::Route(QObject *parent)
-    : QObject(parent), d_ptr(new RoutePrivate(this))
+Route::Route(QObject *parent):
+    QObject(parent), d_ptr(new RoutePrivate(this))
 {
 }
 
-Route::Route(RoutePrivate &dd, QObject *parent)
-    : QObject(parent), d_ptr(&dd)
+Route::Route(RoutePrivate &dd, QObject *parent):
+    QObject(parent), d_ptr(&dd)
 {
 }
 
@@ -51,20 +51,32 @@ Route::~Route()
 {
 }
 
-Route * Route::create(Place *from, Place *to, QObject *parent)
+Route * Route::create(Place *from, Place *to, const QDateTime &departureDate,
+                      const QDateTime &arrivalDate, int totalTime, int walkingTime,
+                      QList<Mode *> &modes, QObject *parent)
 {
     Route * returned = new Route(parent);
+    from->setParent(returned);
     returned->d_func()->from = from;
+    to->setParent(returned);
     returned->d_func()->to = to;
+    returned->d_func()->departureDate = departureDate;
+    returned->d_func()->arrivalDate = arrivalDate;
+    returned->d_func()->totalTime = totalTime;
+    returned->d_func()->walkingTime = walkingTime;
+    foreach (Mode *mode, modes) {
+        mode->setParent(mode);
+    }
+    returned->d_func()->modes = modes;
     return returned;
 }
 
-Route * Route::copy(Route *route, QObject *parent)
+Route * Route::copy(Route *other, QObject *parent)
 {
-    Route * returned = new Route(parent);
-    returned->d_func()->from = route->d_func()->from;
-    returned->d_func()->to = route->d_func()->to;
-    return returned;
+    // Warning: pointers will be shared
+    return Route::create(other->d_func()->from, other->d_func()->to, other->d_func()->departureDate,
+                         other->d_func()->arrivalDate, other->d_func()->totalTime,
+                         other->d_func()->walkingTime, other->d_func()->modes, parent);
 }
 
 Place * Route::from() const
@@ -79,3 +91,32 @@ Place * Route::to() const
     return d->to;
 }
 
+QDateTime Route::departureDate() const
+{
+    Q_D(const Route);
+    return d->departureDate;
+}
+
+QDateTime Route::arrivalDate() const
+{
+    Q_D(const Route);
+    return d->arrivalDate;
+}
+
+int Route::totalTime() const
+{
+    Q_D(const Route);
+    return d->totalTime;
+}
+
+int Route::walkingTime() const
+{
+    Q_D(const Route);
+    return d->walkingTime;
+}
+
+QList<Mode *> Route::modes() const
+{
+    Q_D(const Route);
+    return d->modes;
+}
