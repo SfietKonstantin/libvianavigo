@@ -115,8 +115,8 @@ void RouteSearchModelPrivate::handleFinished(QNetworkReply *reply)
         QString arrivalName = route.value(ARRIVAL_NAME_KEY).toString();
         QString arrivalType = route.value(ARRIVAL_TYPE_KEY).toString();
 
-        int totalTime = route.value(TOTAL_TIME_KEY).toInt();
-        int walkingTime = route.value(WALKING_TIME_KEY).toInt();
+        int totalTime = route.value(TOTAL_TIME_KEY).toDouble();
+        int walkingTime = route.value(WALKING_TIME_KEY).toDouble();
 
         QList<Mode *> modes;
 
