@@ -156,3 +156,13 @@ QList<Mode *> Route::modes() const
     Q_D(const Route);
     return d->modes;
 }
+
+QList<QObject *> Route::modeObjects() const
+{
+    Q_D(const Route);
+    QList<QObject *> modes;
+    foreach (Mode *mode, d->modes) {
+        modes.append(mode);
+    }
+    return modes;
+}

@@ -49,7 +49,7 @@ class VIANAVIGO_EXPORT Route: public QObject
     Q_PROPERTY(QDateTime arrivalDate READ arrivalDate CONSTANT)
     Q_PROPERTY(int totalTime READ totalTime CONSTANT)
     Q_PROPERTY(int walkingTime READ walkingTime CONSTANT)
-    Q_PROPERTY(QList<Mode *> modes READ modes CONSTANT)
+    Q_PROPERTY(QList<QObject *> modes READ modeObjects CONSTANT)
     Q_ENUMS(Type)
 public:
     enum Type {
@@ -77,6 +77,7 @@ public:
     int totalTime() const;
     int walkingTime() const;
     QList<Mode *> modes() const;
+    QList<QObject *> modeObjects() const;
 Q_SIGNALS:
 protected:
     explicit Route(RoutePrivate &dd, QObject *parent = 0);
