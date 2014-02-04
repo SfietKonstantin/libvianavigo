@@ -32,6 +32,13 @@
 #include "route.h"
 #include "route_p.h"
 
+static const char *FASTER = "1";
+static const char *LESS_CONNECTIONS = "2";
+static const char *LESS_WALKING = "3";
+static const char *NEXT_SCHEDULE = "4";
+static const char *MORE_WALKING = "5";
+static const char *ONLY_WALKING = "6";
+
 RoutePrivate::RoutePrivate(Route *q):
     q_ptr(q)
 {
@@ -51,11 +58,13 @@ Route::~Route()
 {
 }
 
-Route * Route::create(Place *from, Place *to, const QDateTime &departureDate,
+Route * Route::create(const QString &type, Place *from, Place *to, const QDateTime &departureDate,
                       const QDateTime &arrivalDate, int totalTime, int walkingTime,
                       QList<Mode *> &modes, QObject *parent)
 {
     Route * returned = new Route(parent);
+    returned->d_func()->type = typeFromString(type);
+    returned->d_func()->typeString = type;
     from->setParent(returned);
     returned->d_func()->from = from;
     to->setParent(returned);
@@ -74,9 +83,36 @@ Route * Route::create(Place *from, Place *to, const QDateTime &departureDate,
 Route * Route::copy(Route *other, QObject *parent)
 {
     // Warning: pointers will be shared
-    return Route::create(other->d_func()->from, other->d_func()->to, other->d_func()->departureDate,
-                         other->d_func()->arrivalDate, other->d_func()->totalTime,
-                         other->d_func()->walkingTime, other->d_func()->modes, parent);
+    return Route::create(other->d_func()->typeString, other->d_func()->from, other->d_func()->to,
+                         other->d_func()->departureDate, other->d_func()->arrivalDate,
+                         other->d_func()->totalTime, other->d_func()->walkingTime,
+                         other->d_func()->modes, parent);
+}
+
+Route::Type Route::typeFromString(const QString &type)
+{
+    Route::Type returnedType = Route::Invalid;
+    if (type == FASTER) {
+        returnedType = Faster;
+    } else if (type == LESS_CONNECTIONS) {
+        returnedType = LessConnections;
+    } else if (type == LESS_WALKING) {
+        returnedType = LessWalking;
+    } else if (type == NEXT_SCHEDULE) {
+        returnedType = NextSchedule;
+    } else if (type == MORE_WALKING) {
+        returnedType = MoreWalking;
+    } else if (type == ONLY_WALKING) {
+        returnedType = OnlyWalking;
+    }
+
+    return returnedType;
+}
+
+Route::Type Route::type() const
+{
+    Q_D(const Route);
+    return d->type;
 }
 
 Place * Route::from() const

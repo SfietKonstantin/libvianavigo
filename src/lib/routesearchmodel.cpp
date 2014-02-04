@@ -41,6 +41,7 @@
 static const char *USE = "1";
 static const char *DONT_USE = "0";
 static const char *RESULTS_KEY = "results";
+static const char *TYPE_KEY = "type";
 static const char *DEPARTURE_TIME_KEY = "depart";
 static const char *ARRIVAL_TIME_KEY = "arrivee";
 static const char *DEPARTURE_NAME_KEY = "nomDepart";
@@ -107,6 +108,7 @@ void RouteSearchModelPrivate::handleFinished(QNetworkReply *reply)
     QJsonArray list = document.object().value(RESULTS_KEY).toArray();
     foreach (const QJsonValue &entry, list) {
         QJsonObject route = entry.toObject();
+        QString type = route.value(TYPE_KEY).toString();
         QString departureTime = route.value(DEPARTURE_TIME_KEY).toString();
         QString departureName = route.value(DEPARTURE_NAME_KEY).toString();
         QString departureType = route.value(DEPARTURE_TYPE_KEY).toString();
@@ -120,7 +122,7 @@ void RouteSearchModelPrivate::handleFinished(QNetworkReply *reply)
 
         QList<Mode *> modes;
 
-        routes.append(Route::create(Place::create(departureName, QString(), departureType),
+        routes.append(Route::create(type, Place::create(departureName, QString(), departureType),
                                     Place::create(arrivalName, QString(), arrivalType),
                                     Manager::getDate(departureTime), Manager::getDate(arrivalTime),
                                     totalTime, walkingTime, modes, this));

@@ -38,6 +38,8 @@ class RoutePrivate
 {
 public:
     explicit RoutePrivate(Route *q);
+    Route::Type type;
+    QString typeString;
     Place * from;
     Place * to;
     QDateTime departureDate;
