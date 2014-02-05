@@ -122,7 +122,8 @@ void RouteSearchModelPrivate::handleFinished(QNetworkReply *reply)
         QString arrivalType = route.value(ARRIVAL_TYPE_KEY).toString();
 
         int totalTime = route.value(TOTAL_TIME_KEY).toDouble();
-        int walkingTime = route.value(WALKING_TIME_KEY).toDouble();
+        // MAP is a string
+        int walkingTime = route.value(WALKING_TIME_KEY).toString().toInt();
 
         QJsonArray modesArray = route.value(MODES_KEY).toArray();
         QList<Mode *> modes;
