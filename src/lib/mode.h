@@ -43,6 +43,7 @@ class VIANAVIGO_EXPORT Mode: public QObject
     Q_PROPERTY(Type type READ type CONSTANT)
     Q_PROPERTY(QString line READ line CONSTANT)
     Q_PROPERTY(QString externalCode READ externalCode CONSTANT)
+    Q_ENUMS(Type)
 public:
     enum Type {
         Invalid,
