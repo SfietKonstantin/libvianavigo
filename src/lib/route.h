@@ -49,24 +49,25 @@ class VIANAVIGO_EXPORT Route: public QObject
     Q_PROPERTY(QDateTime arrivalDate READ arrivalDate CONSTANT)
     Q_PROPERTY(int totalTime READ totalTime CONSTANT)
     Q_PROPERTY(int walkingTime READ walkingTime CONSTANT)
+    Q_PROPERTY(QString zones READ zones CONSTANT)
     Q_PROPERTY(QList<QObject *> modes READ modeObjects CONSTANT)
     Q_ENUMS(Type)
 public:
     enum Type {
-        Invalid,
-        Faster,
-        LessConnections,
-        LessWalking,
-        NextSchedule,
-        MoreWalking,
-        OnlyWalking
+        Invalid = 0,
+        Faster = 1,
+        LessConnections = 2,
+        LessWalking = 3,
+        NextSchedule = 4,
+        MoreWalking = 5,
+        OnlyWalking = 6
     };
     explicit Route(QObject *parent = 0);
     virtual ~Route();
     static Route * create(const QString &type, Place *from, Place *to,
                           const QDateTime &departureDate, const QDateTime &arrivalDate,
-                          int totalTime, int walkingTime, QList<Mode *> &modes,
-                          QObject *parent = 0);
+                          int totalTime, int walkingTime, const QString &zones,
+                          const QList<Mode *> &modes, QObject *parent = 0);
     static Route * copy(Route *other, QObject *parent = 0);
     static Type typeFromString(const QString &type);
     Type type() const;
@@ -76,6 +77,7 @@ public:
     QDateTime arrivalDate() const;
     int totalTime() const;
     int walkingTime() const;
+    QString zones() const;
     QList<Mode *> modes() const;
     QList<QObject *> modeObjects() const;
 Q_SIGNALS:

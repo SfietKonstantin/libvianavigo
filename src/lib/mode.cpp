@@ -44,7 +44,7 @@ static const char *WALKING = "Marche";
 static const char *WAITING = "Attente";
 
 ModePrivate::ModePrivate(Mode *q):
-    type(Mode::Invalid), q_ptr(q)
+    type(Mode::Invalid), walkingTime(-1), waitingTime(-1), q_ptr(q)
 {
 }
 
@@ -62,20 +62,32 @@ Mode::~Mode()
 {
 }
 
-Mode * Mode::create(const QString &type, const QString &line, QString externalCode, QObject *parent)
+Mode * Mode::create(const QString &type, const QString &network, const QString &line,
+                    const QString &externalCode, const QString &direction,
+                    const QString &departurePlace, const QTime &departureTime, int walkingTime,
+                    int waitingTime, QObject *parent)
 {
     Mode * returned = new Mode(parent);
     returned->d_func()->type = typeFromString(type);
     returned->d_func()->typeString = type;
+    returned->d_func()->network = network;
     returned->d_func()->line = line;
     returned->d_func()->externalCode = externalCode;
+    returned->d_func()->direction = direction;
+    returned->d_func()->departurePlace = departurePlace;
+    returned->d_func()->departureTime = departureTime;
+    returned->d_func()->walkingTime = walkingTime;
+    returned->d_func()->waitingTime = waitingTime;
     return returned;
 }
 
 Mode * Mode::copy(Mode *other, QObject *parent)
 {
-    return Mode::create(other->d_func()->typeString, other->d_func()->line,
-                        other->d_func()->externalCode, parent);
+    return Mode::create(other->d_func()->typeString, other->d_func()->network,
+                        other->d_func()->line, other->d_func()->externalCode,
+                        other->d_func()->direction, other->d_func()->departurePlace,
+                        other->d_func()->departureTime, other->d_func()->walkingTime,
+                        other->d_func()->waitingTime, parent);
 }
 
 Mode::Type Mode::typeFromString(const QString &type)
@@ -118,6 +130,12 @@ QString Mode::typeString() const
     return d->typeString;
 }
 
+QString Mode::network() const
+{
+    Q_D(const Mode);
+    return d->network;
+}
+
 QString Mode::line() const
 {
     Q_D(const Mode);
@@ -128,4 +146,34 @@ QString Mode::externalCode() const
 {
     Q_D(const Mode);
     return d->externalCode;
+}
+
+QString Mode::direction() const
+{
+    Q_D(const Mode);
+    return d->direction;
+}
+
+QString Mode::departurePlace() const
+{
+    Q_D(const Mode);
+    return d->departurePlace;
+}
+
+QTime Mode::departureTime() const
+{
+    Q_D(const Mode);
+    return d->departureTime;
+}
+
+int Mode::walkingTime() const
+{
+    Q_D(const Mode);
+    return d->walkingTime;
+}
+
+int Mode::waitingTime() const
+{
+    Q_D(const Mode);
+    return d->waitingTime;
 }

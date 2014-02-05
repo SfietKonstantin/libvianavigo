@@ -46,6 +46,7 @@ static const char *DATE_TYPE_KEY = "dateType"; // Seems to be set to 1 for timed
 static const char *DATE_KEY = "date";
 static const char *MODES_KEY = "modes";
 static const char *WALK_SPEED_KEY = "walkSpeed";
+static const char *ITINERARY_KEY = "itineraryType";
 
 static const char *DATE_FORMAT = "yyyy-MM-ddThh:mm";
 static const char *DATE_TYPE = "1";
@@ -57,7 +58,7 @@ public:
     static QUrl getSearchRouteUrl(const QString &departure, const QString &departureType,
                                   const QString &arrival, const QString &arrivalType,
                                   const QDateTime &date, const QString &modes,
-                                  const QString &walkSpeed);
+                                  const QString &walkSpeed, int routeType);
     QNetworkAccessManager *networkAccessManager;
 protected:
     Manager * const q_ptr;
@@ -73,7 +74,7 @@ ManagerPrivate::ManagerPrivate(Manager *q)
 QUrl ManagerPrivate::getSearchRouteUrl(const QString &departure, const QString &departureType,
                                        const QString &arrival, const QString &arrivalType,
                                        const QDateTime &date, const QString &modes,
-                                       const QString &walkSpeed)
+                                       const QString &walkSpeed, int routeType)
 {
     if (departure.isEmpty() || arrival.isEmpty() || date.isNull() || modes.size() != 5
         || walkSpeed.size() != 1) {
@@ -96,6 +97,9 @@ QUrl ManagerPrivate::getSearchRouteUrl(const QString &departure, const QString &
     query.addQueryItem(DATE_KEY, date.toString(DATE_FORMAT));
     query.addQueryItem(MODES_KEY, modes);
     query.addQueryItem(WALK_SPEED_KEY, walkSpeed);
+    if (routeType > 0) {
+        query.addQueryItem(ITINERARY_KEY, QString::number(routeType));
+    }
     url.setQuery(query);
     return url;
 }
@@ -136,11 +140,11 @@ QNetworkReply * Manager::searchPlace(const QString &text)
 QNetworkReply * Manager::searchRoute(const QString &departure, const QString &departureType,
                                      const QString &arrival, const QString &arrivalType,
                                      const QDateTime &date, const QString &modes,
-                                     const QString &walkSpeed)
+                                     const QString &walkSpeed, int routeType)
 {
     Q_D(Manager);
     QUrl url = ManagerPrivate::getSearchRouteUrl(departure, departureType, arrival, arrivalType,
-                                                 date, modes, walkSpeed);
+                                                 date, modes, walkSpeed, routeType);
     if (!url.isEmpty()) {
         return d->networkAccessManager->get(QNetworkRequest(url));
     }

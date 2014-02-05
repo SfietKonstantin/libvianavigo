@@ -76,6 +76,7 @@ public:
     void setUseBus(bool useBus);
     WalkSpeed walkSpeed() const;
     void setWalkSpeed(WalkSpeed walkSpeed);
+    QString modesString();
 public Q_SLOTS:
     void search();
 Q_SIGNALS:

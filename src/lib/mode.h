@@ -35,14 +35,21 @@
 #include "vianavigo_global.h"
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QTime>
 
 class ModePrivate;
 class VIANAVIGO_EXPORT Mode: public QObject
 {
     Q_OBJECT
     Q_PROPERTY(Type type READ type CONSTANT)
+    Q_PROPERTY(QString network READ network CONSTANT)
     Q_PROPERTY(QString line READ line CONSTANT)
     Q_PROPERTY(QString externalCode READ externalCode CONSTANT)
+    Q_PROPERTY(QString direction READ direction CONSTANT)
+    Q_PROPERTY(QString departurePlace READ departurePlace CONSTANT)
+    Q_PROPERTY(QTime departureTime READ departureTime CONSTANT)
+    Q_PROPERTY(int walkingTime READ walkingTime CONSTANT)
+    Q_PROPERTY(int waitingTime READ waitingTime CONSTANT)
     Q_ENUMS(Type)
 public:
     enum Type {
@@ -60,13 +67,22 @@ public:
     };
     explicit Mode(QObject *parent = 0);
     virtual ~Mode();
-    static Mode * create(const QString &type, const QString &line, QString externalCode, QObject *parent = 0);
+    static Mode * create(const QString &type, const QString &network, const QString &line,
+                         const QString &externalCode, const QString &direction,
+                         const QString &departurePlace, const QTime &departureTime,
+                         int walkingTime, int waitingTime, QObject *parent = 0);
     static Mode * copy(Mode *other, QObject *parent = 0);
     static Type typeFromString(const QString &type);
     Type type() const;
     QString typeString() const;
+    QString network() const;
     QString line() const;
     QString externalCode() const;
+    QString direction() const;
+    QString departurePlace() const;
+    QTime departureTime() const;
+    int walkingTime() const;
+    int waitingTime() const;
 Q_SIGNALS:
 protected:
     explicit Mode(ModePrivate &dd, QObject *parent = 0);

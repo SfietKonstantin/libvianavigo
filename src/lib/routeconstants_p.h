@@ -29,29 +29,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#ifndef MODE_P_H
-#define MODE_P_H
+#ifndef ROUTECONSTANTS_P_H
+#define ROUTECONSTANTS_P_H
 
-#include "mode.h"
+static const char *DEPARTURE_TIME_KEY = "depart";
+static const char *ARRIVAL_TIME_KEY = "arrivee";
+static const char *DEPARTURE_NAME_KEY = "nomDepart";
+static const char *DEPARTURE_TYPE_KEY = "departType";
+static const char *ARRIVAL_NAME_KEY = "nomArrivee";
+static const char *ARRIVAL_TYPE_KEY = "arriveeType";
+static const char *TOTAL_TIME_KEY = "duree";
+static const char *MODE_TYPE_KEY = "mode";
+static const char *MODE_NETWORK_KEY = "networkName";
+static const char *MODE_LINE_KEY = "ligne";
+static const char *MODE_EXTERNAL_CODE_KEY = "externalCode";
 
-class ModePrivate
-{
-public:
-    explicit ModePrivate(Mode *q);
-    Mode::Type type;
-    QString typeString;
-    QString network;
-    QString line;
-    QString externalCode;
-    QString direction;
-    QString departurePlace;
-    QTime departureTime;
-    int walkingTime;
-    int waitingTime;
-protected:
-    Mode * const q_ptr;
-private:
-    Q_DECLARE_PUBLIC(Mode)
-};
-
-#endif // MODE_P_H
+#endif // ROUTECONSTANTS_P_H

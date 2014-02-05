@@ -46,6 +46,7 @@ public:
     QDateTime arrivalDate;
     int totalTime;
     int walkingTime;
+    QString zones;
     QList<Mode *> modes;
 protected:
     Route * const q_ptr;

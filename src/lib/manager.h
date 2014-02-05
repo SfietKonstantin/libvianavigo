@@ -50,7 +50,7 @@ public:
     QNetworkReply * searchRoute(const QString &departure, const QString &departureType,
                                 const QString &arrival, const QString &arrivalType,
                                 const QDateTime &date, const QString &modes,
-                                const QString &walkSpeed);
+                                const QString &walkSpeed, int routeType = 0);
 protected:
     explicit Manager(ManagerPrivate &dd, QObject *parent = 0);
     const QScopedPointer<ManagerPrivate> d_ptr;

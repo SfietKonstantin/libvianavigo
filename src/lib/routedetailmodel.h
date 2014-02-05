@@ -29,29 +29,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#ifndef MODE_P_H
-#define MODE_P_H
+#ifndef ROUTEDETAILMODEL_H
+#define ROUTEDETAILMODEL_H
 
-#include "mode.h"
+#include "vianavigo_global.h"
+#include "abstractmodel.h"
+#include "routesearchmodel.h"
+#include "route.h"
 
-class ModePrivate
+class RouteDetailModelPrivate;
+class VIANAVIGO_EXPORT RouteDetailModel : public AbstractModel
 {
+    Q_OBJECT
+    Q_PROPERTY(RouteSearchModel *routeSearchModel READ routeSearchModel WRITE setRouteSearchModel
+               NOTIFY routeSearchModelChanged)
+    Q_PROPERTY(Route::Type routeType READ routeType WRITE setRouteType NOTIFY routeTypeChanged)
+    Q_PROPERTY(Route * route READ route NOTIFY routeChanged)
 public:
-    explicit ModePrivate(Mode *q);
-    Mode::Type type;
-    QString typeString;
-    QString network;
-    QString line;
-    QString externalCode;
-    QString direction;
-    QString departurePlace;
-    QTime departureTime;
-    int walkingTime;
-    int waitingTime;
-protected:
-    Mode * const q_ptr;
+    explicit RouteDetailModel(QObject *parent = 0);
+    RouteSearchModel * routeSearchModel() const;
+    void setRouteSearchModel(RouteSearchModel *routeSearchModel);
+    Route::Type routeType() const;
+    void setRouteType(Route::Type routeType);
+    Route * route() const;
+public Q_SLOTS:
+    void search();
+Q_SIGNALS:
+    void routeSearchModelChanged();
+    void routeTypeChanged();
+    void routeChanged();
 private:
-    Q_DECLARE_PUBLIC(Mode)
+    Q_DECLARE_PRIVATE(RouteDetailModel)
+
 };
 
-#endif // MODE_P_H
+#endif // ROUTEDETAILMODEL_H

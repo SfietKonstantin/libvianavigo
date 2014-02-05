@@ -60,7 +60,7 @@ Route::~Route()
 
 Route * Route::create(const QString &type, Place *from, Place *to, const QDateTime &departureDate,
                       const QDateTime &arrivalDate, int totalTime, int walkingTime,
-                      QList<Mode *> &modes, QObject *parent)
+                      const QString &zones, const QList<Mode *> &modes, QObject *parent)
 {
     Route * returned = new Route(parent);
     returned->d_func()->type = typeFromString(type);
@@ -73,6 +73,7 @@ Route * Route::create(const QString &type, Place *from, Place *to, const QDateTi
     returned->d_func()->arrivalDate = arrivalDate;
     returned->d_func()->totalTime = totalTime;
     returned->d_func()->walkingTime = walkingTime;
+    returned->d_func()->zones = zones;
     foreach (Mode *mode, modes) {
         mode->setParent(mode);
     }
@@ -86,7 +87,7 @@ Route * Route::copy(Route *other, QObject *parent)
     return Route::create(other->d_func()->typeString, other->d_func()->from, other->d_func()->to,
                          other->d_func()->departureDate, other->d_func()->arrivalDate,
                          other->d_func()->totalTime, other->d_func()->walkingTime,
-                         other->d_func()->modes, parent);
+                         other->d_func()->zones, other->d_func()->modes, parent);
 }
 
 Route::Type Route::typeFromString(const QString &type)
@@ -149,6 +150,12 @@ int Route::walkingTime() const
 {
     Q_D(const Route);
     return d->walkingTime;
+}
+
+QString Route::zones() const
+{
+    Q_D(const Route);
+    return d->zones;
 }
 
 QList<Mode *> Route::modes() const

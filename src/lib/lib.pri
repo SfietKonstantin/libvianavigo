@@ -10,7 +10,9 @@ HEADERS += $$PWD/vianavigo_global.h \
     $$PWD/abstractmodel_p.h \
     $$PWD/manager.h \
     $$PWD/placesearchmodel.h \
-    $$PWD/routesearchmodel.h
+    $$PWD/routeconstants_p.h \
+    $$PWD/routesearchmodel.h \
+    $$PWD/routedetailmodel.h
 
 SOURCES += $$PWD/place.cpp \
     $$PWD/route.cpp \
@@ -18,4 +20,5 @@ SOURCES += $$PWD/place.cpp \
     $$PWD/abstractmodel.cpp \
     $$PWD/manager.cpp \
     $$PWD/placesearchmodel.cpp \
-    $$PWD/routesearchmodel.cpp
+    $$PWD/routesearchmodel.cpp \
+    $$PWD/routedetailmodel.cpp

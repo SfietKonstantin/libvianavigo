@@ -32,6 +32,7 @@
 #include "routesearchmodel.h"
 #include "abstractmodel_p.h"
 #include "route.h"
+#include "routeconstants_p.h"
 #include <QtCore/QDebug>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonParseError>
@@ -42,24 +43,14 @@ static const char *USE = "1";
 static const char *DONT_USE = "0";
 static const char *RESULTS_KEY = "results";
 static const char *TYPE_KEY = "type";
-static const char *DEPARTURE_TIME_KEY = "depart";
-static const char *ARRIVAL_TIME_KEY = "arrivee";
-static const char *DEPARTURE_NAME_KEY = "nomDepart";
-static const char *DEPARTURE_TYPE_KEY = "departType";
-static const char *ARRIVAL_NAME_KEY = "nomArrivee";
-static const char *ARRIVAL_TYPE_KEY = "arriveeType";
-static const char *TOTAL_TIME_KEY = "duree";
 static const char *WALKING_TIME_KEY = "MAP";
 static const char *MODES_KEY = "etapes";
-static const char *MODE_TYPE_KEY = "mode";
-static const char *MODE_LINE_KEY = "ligne";
-static const char *MODE_EXTERNAL_CODE_KEY = "externalCode";
 
 class RouteSearchModelPrivate: public AbstractModelPrivate
 {
 public:
     explicit RouteSearchModelPrivate(RouteSearchModel *q);
-    QString modesToString() const;
+    QString modesString() const;
     Place * departure;
     Place * arrival;
     QDateTime date;
@@ -79,7 +70,7 @@ RouteSearchModelPrivate::RouteSearchModelPrivate(RouteSearchModel *q)
 {
 }
 
-QString RouteSearchModelPrivate::modesToString() const
+QString RouteSearchModelPrivate::modesString() const
 {
     // The order of entries are
     // 1. train
@@ -130,15 +121,17 @@ void RouteSearchModelPrivate::handleFinished(QNetworkReply *reply)
         foreach (const QJsonValue &modeEntry, modesArray) {
             QJsonObject modeObject = modeEntry.toObject();
             QString modeType = modeObject.value(MODE_TYPE_KEY).toString();
+            QString network = modeObject.value(MODE_NETWORK_KEY).toString();
             QString line = modeObject.value(MODE_LINE_KEY).toString();
             QString externalCode = modeObject.value(MODE_EXTERNAL_CODE_KEY).toString();
-            Mode *mode = Mode::create(modeType, line, externalCode);
+            Mode *mode = Mode::create(modeType, network, line, externalCode, QString(), QString(),
+                                      QTime(), -1, -1);
             modes.append(mode);
         }
         routes.append(Route::create(type, Place::create(departureName, QString(), departureType),
                                     Place::create(arrivalName, QString(), arrivalType),
                                     Manager::getDate(departureTime), Manager::getDate(arrivalTime),
-                                    totalTime, walkingTime, modes, this));
+                                    totalTime, walkingTime, QString(), modes, this));
     }
     addData(routes);
     clearReply();
@@ -285,6 +278,12 @@ void RouteSearchModel::setWalkSpeed(WalkSpeed walkSpeed)
     }
 }
 
+QString RouteSearchModel::modesString()
+{
+    Q_D(RouteSearchModel);
+    return d->modesString();
+}
+
 void RouteSearchModel::search()
 {
     Q_D(RouteSearchModel);
@@ -310,7 +309,7 @@ void RouteSearchModel::search()
 
     QNetworkReply *reply = d->manager->searchRoute(d->departure->name(), d->departure->typeString(),
                                                    d->arrival->name(), d->arrival->typeString(),
-                                                   d->date, d->modesToString(),
+                                                   d->date, d->modesString(),
                                                    QString::number(d->walkSpeed));
     if (reply) {
         d->clear();
