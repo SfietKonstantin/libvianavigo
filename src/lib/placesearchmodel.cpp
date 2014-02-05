@@ -62,7 +62,14 @@ PlaceSearchModelPrivate::PlaceSearchModelPrivate(PlaceSearchModel *q)
 void PlaceSearchModelPrivate::handleFinished(QNetworkReply *reply)
 {
     QJsonParseError error;
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll(), &error);
+    QByteArray data = reply->readAll();
+    if (data.isEmpty()) {
+        clearReply();
+        setStatus(AbstractModel::Idle);
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(data, &error);
 
     if (error.error != QJsonParseError::NoError) {
         qWarning() << "Failed to parse result:" << error.errorString();
