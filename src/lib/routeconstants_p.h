@@ -42,6 +42,5 @@ static const char *TOTAL_TIME_KEY = "duree";
 static const char *MODE_TYPE_KEY = "mode";
 static const char *MODE_NETWORK_KEY = "networkName";
 static const char *MODE_LINE_KEY = "ligne";
-static const char *MODE_EXTERNAL_CODE_KEY = "externalCode";
 
 #endif // ROUTECONSTANTS_P_H

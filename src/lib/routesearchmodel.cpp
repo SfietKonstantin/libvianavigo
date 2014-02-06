@@ -45,6 +45,7 @@ static const char *RESULTS_KEY = "results";
 static const char *TYPE_KEY = "type";
 static const char *WALKING_TIME_KEY = "MAP";
 static const char *MODES_KEY = "etapes";
+static const char *MODE_EXTERNAL_CODE_KEY = "externalCode";
 
 class RouteSearchModelPrivate: public AbstractModelPrivate
 {

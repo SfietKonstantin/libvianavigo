@@ -46,6 +46,7 @@ static const char *STEP_DEPARTURE_PLACE_KEY = "nom";
 static const char *STEP_DEPARTURE_TIME_KEY = "depart";
 static const char *STEP_WALKING_TIME_KEY = "walkDuration";
 static const char *STEP_WAITING_TIME_KEY = "waitDuration";
+static const char *MODE_LINE_EXTERNAL_CODE_KEY = "lineExternalCode";
 
 class RouteDetailModelPrivate: public AbstractModelPrivate
 {
@@ -102,11 +103,11 @@ void RouteDetailModelPrivate::handleFinished(QNetworkReply *reply)
         QString stepType = stepObject.value(MODE_TYPE_KEY).toString();
         QString network = stepObject.value(MODE_NETWORK_KEY).toString();
         QString line = stepObject.value(MODE_LINE_KEY).toString();
-        QString externalCode = stepObject.value(MODE_EXTERNAL_CODE_KEY).toString();
+        QString externalCode = stepObject.value(MODE_LINE_EXTERNAL_CODE_KEY).toString();
         QString direction = stepObject.value(STEP_DIRECTION_KEY).toString();
         QString departurePlace = stepObject.value(STEP_DEPARTURE_PLACE_KEY).toString();
         QTime departureTime = QTime::fromString(stepObject.value(STEP_DEPARTURE_TIME_KEY).toString(),
-                                                "hh:MM");
+                                                "hh:mm");
         int walkingTime = stepObject.value(STEP_WALKING_TIME_KEY).toDouble(-1);
         int waitingTime = stepObject.value(STEP_WAITING_TIME_KEY).toDouble(-1);
         Mode *step = Mode::create(stepType, network, line, externalCode, direction, departurePlace,
