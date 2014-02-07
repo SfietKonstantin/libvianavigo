@@ -44,6 +44,7 @@ class VIANAVIGO_EXPORT Mode: public QObject
     Q_PROPERTY(Type type READ type CONSTANT)
     Q_PROPERTY(QString network READ network CONSTANT)
     Q_PROPERTY(QString line READ line CONSTANT)
+    Q_PROPERTY(QString lineCode READ lineCode CONSTANT)
     Q_PROPERTY(QString externalCode READ externalCode CONSTANT)
     Q_PROPERTY(QString direction READ direction CONSTANT)
     Q_PROPERTY(QString departurePlace READ departurePlace CONSTANT)
@@ -68,15 +69,17 @@ public:
     explicit Mode(QObject *parent = 0);
     virtual ~Mode();
     static Mode * create(const QString &type, const QString &network, const QString &line,
-                         const QString &externalCode, const QString &direction,
-                         const QString &departurePlace, const QTime &departureTime,
-                         int walkingTime, int waitingTime, QObject *parent = 0);
+                         const QString &lineCode, const QString &externalCode,
+                         const QString &direction, const QString &departurePlace,
+                         const QTime &departureTime, int walkingTime, int waitingTime,
+                         QObject *parent = 0);
     static Mode * copy(Mode *other, QObject *parent = 0);
     static Type typeFromString(const QString &type);
     Type type() const;
     QString typeString() const;
     QString network() const;
     QString line() const;
+    QString lineCode() const;
     QString externalCode() const;
     QString direction() const;
     QString departurePlace() const;

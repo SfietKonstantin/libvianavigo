@@ -124,9 +124,10 @@ void RouteSearchModelPrivate::handleFinished(QNetworkReply *reply)
             QString modeType = modeObject.value(MODE_TYPE_KEY).toString();
             QString network = modeObject.value(MODE_NETWORK_KEY).toString();
             QString line = modeObject.value(MODE_LINE_KEY).toString();
+            QString lineCode = modeObject.value(MODE_LINE_CODE_KEY).toString();
             QString externalCode = modeObject.value(MODE_EXTERNAL_CODE_KEY).toString();
-            Mode *mode = Mode::create(modeType, network, line, externalCode, QString(), QString(),
-                                      QTime(), -1, -1);
+            Mode *mode = Mode::create(modeType, network, line, lineCode, externalCode, QString(),
+                                      QString(), QTime(), -1, -1);
             modes.append(mode);
         }
         routes.append(Route::create(type, Place::create(departureName, QString(), departureType),

@@ -63,7 +63,7 @@ Mode::~Mode()
 }
 
 Mode * Mode::create(const QString &type, const QString &network, const QString &line,
-                    const QString &externalCode, const QString &direction,
+                    const QString &lineCode, const QString &externalCode, const QString &direction,
                     const QString &departurePlace, const QTime &departureTime, int walkingTime,
                     int waitingTime, QObject *parent)
 {
@@ -72,6 +72,7 @@ Mode * Mode::create(const QString &type, const QString &network, const QString &
     returned->d_func()->typeString = type;
     returned->d_func()->network = network;
     returned->d_func()->line = line;
+    returned->d_func()->lineCode = lineCode;
     returned->d_func()->externalCode = externalCode;
     returned->d_func()->direction = direction;
     returned->d_func()->departurePlace = departurePlace;
@@ -84,10 +85,10 @@ Mode * Mode::create(const QString &type, const QString &network, const QString &
 Mode * Mode::copy(Mode *other, QObject *parent)
 {
     return Mode::create(other->d_func()->typeString, other->d_func()->network,
-                        other->d_func()->line, other->d_func()->externalCode,
-                        other->d_func()->direction, other->d_func()->departurePlace,
-                        other->d_func()->departureTime, other->d_func()->walkingTime,
-                        other->d_func()->waitingTime, parent);
+                        other->d_func()->line, other->d_func()->lineCode,
+                        other->d_func()->externalCode, other->d_func()->direction,
+                        other->d_func()->departurePlace, other->d_func()->departureTime,
+                        other->d_func()->walkingTime, other->d_func()->waitingTime, parent);
 }
 
 Mode::Type Mode::typeFromString(const QString &type)
@@ -140,6 +141,12 @@ QString Mode::line() const
 {
     Q_D(const Mode);
     return d->line;
+}
+
+QString Mode::lineCode() const
+{
+    Q_D(const Mode);
+    return d->lineCode;
 }
 
 QString Mode::externalCode() const

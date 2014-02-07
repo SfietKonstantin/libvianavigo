@@ -42,6 +42,7 @@ public:
     QString typeString;
     QString network;
     QString line;
+    QString lineCode;
     QString externalCode;
     QString direction;
     QString departurePlace;

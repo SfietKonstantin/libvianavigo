@@ -103,6 +103,7 @@ void RouteDetailModelPrivate::handleFinished(QNetworkReply *reply)
         QString stepType = stepObject.value(MODE_TYPE_KEY).toString();
         QString network = stepObject.value(MODE_NETWORK_KEY).toString();
         QString line = stepObject.value(MODE_LINE_KEY).toString();
+        QString lineCode = stepObject.value(MODE_LINE_CODE_KEY).toString();
         QString externalCode = stepObject.value(MODE_LINE_EXTERNAL_CODE_KEY).toString();
         QString direction = stepObject.value(STEP_DIRECTION_KEY).toString();
         QString departurePlace = stepObject.value(STEP_DEPARTURE_PLACE_KEY).toString();
@@ -110,8 +111,8 @@ void RouteDetailModelPrivate::handleFinished(QNetworkReply *reply)
                                                 "hh:mm");
         int walkingTime = stepObject.value(STEP_WALKING_TIME_KEY).toDouble(-1);
         int waitingTime = stepObject.value(STEP_WAITING_TIME_KEY).toDouble(-1);
-        Mode *step = Mode::create(stepType, network, line, externalCode, direction, departurePlace,
-                                  departureTime, walkingTime, waitingTime);
+        Mode *step = Mode::create(stepType, network, line, lineCode, externalCode, direction,
+                                  departurePlace, departureTime, walkingTime, waitingTime);
         steps.append(step);
     }
     emit q->routeChanged();
